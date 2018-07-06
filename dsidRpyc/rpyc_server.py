@@ -1,6 +1,23 @@
 import rpyc
+import pickle
 
-class MyService(rpyc.Service):
+class Aluno(object):
+    """docstring for Aluno"""
+    def __init__(self, notas, nome):
+        super(Aluno, self).__init__()
+        self.notas = notas
+        self.nome = nome
+
+    def getNome(self):
+        return self.nome
+
+    def getNotas(self):
+        return self.notas
+
+    def setNotas(self, notas):
+        self.notas = notas
+
+class Servico(rpyc.Service):
     def on_connect(self, conn):
         # code that runs when a connection is created
         # (to init the service, if needed)
@@ -11,26 +28,26 @@ class MyService(rpyc.Service):
         # (to finalize the service, if needed)
         pass
 
-    def exposed_voidCall(self, request, context):
-        return dsid_pb2.Empty()
+    def exposed_voidCall(self):
+        pass
 
-    def exposed_longCall(self, request, context):
-        return dsid_pb2.longReply(numberReply=request.numberRequest + 2)
+    def exposed_longCall(self, longVar):
+        return longVar + 2
 
-    def exposed_eightLongCall(self, request, context):
-        array = request.arrayRequest
-        return dsid_pb2.eightLongReply(arrayReply=array)
+    def exposed_eightLongCall(self, longArray):
+        array = longArray
+        return array
 
-    def exposed_stringCall(self, request, context):
-        return dsid_pb2.stringReply(nameReply=request.nameRequest + " Bateu")
+    def exposed_stringCall(self, string):
+        return string + " Bateu"
 
-    def exposed_complexCall(self, request, context):
-        aluno = pickle.loads(request.alunoRequest)
+    def exposed_complexCall(self, serializedObject):
+        aluno = pickle.loads(serializedObject)
         aluno.setNotas(5)
         aluno2 = pickle.dumps(aluno)
-        return dsid_pb2.complexReply(alunoReply=aluno2)
+        return aluno2
 
 if __name__ == "__main__":
     from rpyc.utils.server import ThreadedServer
-    t = ThreadedServer(MyService, port=18861)
+    t = ThreadedServer(Servico, port=18861)
     t.start()
