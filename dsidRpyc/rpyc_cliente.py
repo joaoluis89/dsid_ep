@@ -29,7 +29,7 @@ def run():
     numOfTestes = 100
     numOfCalls = 5
     matrixDeTestes = np.zeros((numOfCalls,numOfTestes), dtype=np.float)
-    conn = rpyc.connect("localhost", 18861)
+    conn = rpyc.connect("35.231.207.252", 18861)
     for i in range(100):
         start_time = time.time() 
         conn.root.voidCall()
@@ -60,7 +60,7 @@ def run():
         matrixDeTestes[4][i] = (time.time() - start_time)
     
     df = pd.DataFrame(matrixDeTestes, index=("voidCall", "longCall", "eightLongCall", "stringCall", "complexCall"))
-    df.to_csv("../Resultados/rpyc/rpyc_100exec_local.csv")
+    df.to_csv("../Resultados/rpyc/rpyc_100exec_remoto_externo.csv")
 
 if __name__ == '__main__':
     run()

@@ -45,7 +45,7 @@ def run():
     numOfTestes = 100
     numOfCalls = 5
     matrixDeTestes = np.zeros((numOfCalls,numOfTestes), dtype=np.float)
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel('35.231.207.252:50051')
     for i in range(100):
         start_time = time.time() 
         stub = dsid_pb2_grpc.DsidStub(channel)
@@ -76,7 +76,7 @@ def run():
         aluno2 = pickle.loads(response.alunoReply)
         matrixDeTestes[4][i] = (time.time() - start_time)
     df = pd.DataFrame(matrixDeTestes, index=("voidCall", "longCall", "eightLongCall", "stringCall", "complexCall"))
-    df.to_csv("../Resultados/grpc/grpc_100exec_local.csv")
+    df.to_csv("../Resultados/grpc/grpc_100exec_remota_externa.csv")
 
 if __name__ == '__main__':
     run()
